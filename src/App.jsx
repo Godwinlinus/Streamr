@@ -8,12 +8,14 @@ import SideBar from './components/SideBar'
 import NavBar from './components/NavBar'
 import Preloader from './components/Preloader'
 
+
 import Home from './pages/Home'
 import Favourite from './pages/Favourite'
 import Profile from './pages/Profile'
 import TVShows from './pages/TVShows'
 import Trending from './pages/Trending'
 import MovieDetail from './pages/MovieDetail'
+import Feed from './pages/Feed'
 
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite'
@@ -137,6 +139,7 @@ const AppContent = () => {
                   />
                 }
               />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/movie/:id" element={<MovieDetail />} />
               <Route path="/tv-shows" element={<TVShows />} />
               <Route path="/trending" element={<Trending />} />

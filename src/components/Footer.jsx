@@ -3,22 +3,56 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaTwitter, FaGithub, FaInstagram, FaEnvelope } from "react-icons/fa";
 
+const socials = [
+  { icon: FaTwitter, label: "Twitter", href: "#" },
+  { icon: FaInstagram, label: "Instagram", href: "#" },
+  { icon: FaGithub, label: "Github", href: "#" },
+];
+
+const navSections = [
+  {
+    title: "Explore",
+    links: [
+      { label: "Movies", to: "/" },
+      { label: "TV Shows", to: "/tv-shows" },
+      { label: "Trending", to: "/trending" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms", to: "/terms" },
+      { label: "Privacy", to: "/privacy" },
+    ],
+  },
+];
+
+const FooterNavSection = ({ title, links }) => (
+  <div>
+    <h4 className="text-sm font-medium text-gray-300 mb-2">{title}</h4>
+    <ul className="text-sm space-y-2">
+      {links.map(({ label, to }) => (
+        <li key={label}>
+          <Link to={to} className="text-gray-400 hover:text-white transition-colors">
+            {label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 const Footer = () => {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(null); // null | "ok" | "err"
+  const [status, setStatus] = useState(null);
   const reduce = useReducedMotion();
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    // tiny email validation (replace with your API call)
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    if (!valid) {
-      setStatus("err");
-      return;
-    }
+    if (!valid) return setStatus("err");
     setStatus("ok");
     setEmail("");
-    // TODO: call real subscribe endpoint
   };
 
   return (
@@ -29,112 +63,42 @@ const Footer = () => {
       transition={{ duration: 0.45, ease: "easeOut" }}
       aria-labelledby="footer-heading"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:ml-12 bg-black min-h-screen text-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:ml-12 bg-black text-white">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-          {/* Brand / About */}
+          
           <div className="max-w-sm">
             <h3 id="footer-heading" className="text-2xl font-semibold tracking-tight">
-              <span className="block">Streamr</span>
+              Streamr
             </h3>
             <p className="mt-2 text-sm text-gray-400">
               Discover and track movies and TV shows. Clean UI, fast search, no fluff.
             </p>
 
             <div className="mt-4 flex items-center gap-3">
-              <a
-                href="#"
-                className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
-                aria-label="Streamr on Twitter"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href="#"
-                className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
-                aria-label="Streamr on Instagram"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="#"
-                className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
-                aria-label="Streamr on Github"
-              >
-                <FaGithub />
-              </a>
+              {socials.map(({ icon: Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
+                  aria-label={label}
+                >
+                  <Icon />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Nav links */}
           <nav className="grid grid-cols-2 gap-6 sm:grid-cols-3">
-            <div>
-              <h4 className="text-sm font-medium text-gray-300 mb-2">Explore</h4>
-              <ul className="text-sm space-y-2">
-                <li>
-                  <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                    Movies
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/tv-shows" className="text-gray-400 hover:text-white transition-colors">
-                    TV Shows
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/trending" className="text-gray-400 hover:text-white transition-colors">
-                    Trending
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-medium text-gray-300 mb-2">Company</h4>
-              <ul className="text-sm space-y-2">
-                <li>
-                  <Link to="/about" className="text-gray-400 hover:text-white transition-colors">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/careers" className="text-gray-400 hover:text-white transition-colors">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="text-gray-400 hover:text-white transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-medium text-gray-300 mb-2">Legal</h4>
-              <ul className="text-sm space-y-2">
-                <li>
-                  <Link to="/terms" className="text-gray-400 hover:text-white transition-colors">
-                    Terms
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                    Privacy
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            {navSections.map((section) => (
+              <FooterNavSection key={section.title} {...section} />
+            ))}
           </nav>
 
-          {/* Newsletter / CTA */}
           <div className="w-full max-w-xs">
             <h4 className="text-sm font-medium text-gray-300 mb-2">Get updates</h4>
             <p className="text-sm text-gray-400 mb-3">New releases and curated lists — no spam.</p>
 
-            <form onSubmit={handleSubscribe} className="flex gap-2" aria-label="Subscribe to newsletter">
-              <label htmlFor="footer-email" className="sr-only">
-                Email address
-              </label>
+            <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
                 id="footer-email"
                 type="email"
@@ -166,7 +130,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Legal bar */}
         <div className="mt-8 border-t border-white/6 pt-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <p className="text-xs text-gray-400">
