@@ -73,7 +73,7 @@ const Hero = ({ selectedMovie }) => {
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
 
       {/* Content */}
-      <div className="relative z-10 px-4 sm:px-6 md:px-6 pb-16 sm:pb-24">
+      <div className="relative z-0 px-4 sm:px-6 md:px-6 pb-16 sm:pb-24">
         <motion.div
           className="max-w-3xl space-y-4"
           initial={{ y: 30, opacity: 0 }}

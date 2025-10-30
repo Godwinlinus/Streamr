@@ -1,4 +1,3 @@
-// NavBar.jsx
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +11,7 @@ const NavBar = () => {
     { label: "Movies", href: "/" },
     { label: "TV Shows", href: "/tv-shows" },
     { label: "Trending", href: "/trending" },
+    { label: "Feed", href: "/feed" }, // ✅ Added Feed here
   ];
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const NavBar = () => {
   }, [isOpen]);
 
   const linkBase =
-    "relative px-2 py-1 font-medium transition-colors duration-300 hover:text-white focus-visible:outline-none";
+    "relative px-2 py-1 font-medium transition-colors duration-300 hover:text-white focus-visible:outline-none group";
   const activeStyle = "text-white after:w-full";
 
   return (
@@ -30,14 +30,13 @@ const NavBar = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* Logo — shown only on small screens (mobile). Hidden on md and larger */}
+      {/* Logo (visible only on mobile) */}
       <Link
         to="/"
-        className="block md:hidden text-2xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 bg-clip-text text-transparent tracking-tight"
+        className="block md:hidden text-2xl font-extrabold bg-red-700 bg-clip-text text-transparent tracking-tight"
       >
         Streamr
       </Link>
-
 
       {/* Desktop Links */}
       <div className="hidden md:flex items-center gap-8 text-gray-300">
@@ -51,7 +50,11 @@ const NavBar = () => {
           >
             {link.label}
             {/* Animated underline */}
-            <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 transition-all duration-300 group-hover:w-full" />
+            <span
+              className={`absolute left-0 bottom-0 h-[1px] bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 transition-all duration-300 ${
+                location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+              }`}
+            />
           </Link>
         ))}
       </div>

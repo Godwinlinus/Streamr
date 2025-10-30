@@ -34,7 +34,7 @@ export default function Preloader({ autoFinishMs = 1500, onFinish }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Loading Streamr
+            Streamr
           </motion.span>
         </div>
       </motion.div>
