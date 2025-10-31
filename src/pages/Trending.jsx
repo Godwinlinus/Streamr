@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import MovieCard from '../components/MovieCard';
 import Spinner from '../components/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 const Trending = () => {
   const [trendingContent, setTrendingContent] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeWindow, setTimeWindow] = useState('day'); // 'day' or 'week'
+  const [timeWindow, setTimeWindow] = useState('day'); 
+
+  const navigate = useNavigate();
 
   const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
   const API_OPTIONS = {
@@ -40,6 +43,10 @@ const Trending = () => {
   if (isLoading) return <Spinner />;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
+  const handleSelectMovie = (movie) => {
+    navigate(`/watch/${movie.id}`, { state: movie });
+  };
+
   return (
     <div className="w-full py-8">
       <div className="flex justify-between items-center mb-8 px-4 sm:px-6 md:px-8">
@@ -67,7 +74,7 @@ const Trending = () => {
           </button>
         </div>
       </div>
-      
+
       <motion.div
         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-2 sm:px-3 md:px-4"
         initial={{ opacity: 0 }}
@@ -82,7 +89,7 @@ const Trending = () => {
               title: item.title || item.name,
               release_date: item.release_date || item.first_air_date
             }}
-            onSelectMovie={() => {}} // We can implement hero update if needed
+            onSelectMovie={() => handleSelectMovie(item)}
           />
         ))}
       </motion.div>

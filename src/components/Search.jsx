@@ -20,7 +20,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="
-            block w-full sm:w-72 md:w-80 lg:w-96
+            block w-full md:w-80 lg:w-96
             rounded-full py-2 pl-9 pr-3 
             text-sm placeholder-[#7d7d7d]
             bg-[#1f1f1f] text-white

@@ -1,122 +1,255 @@
-import React, { useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
-import { FaUser, FaEnvelope, FaCog, FaSignOutAlt, FaLock } from 'react-icons/fa'
+// src/components/Profile.jsx
+import React, { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
-/**
- * Professional, minimalistic Profile component with a true pitch-black background.
- * - Accessible: keyboard focus, aria labels
- * - Responsive: compact on mobile, expanded on desktop
- * - Conservative motion respecting user preferences
- * - Props/hooks placeholders so you can wire auth later
- */
+/* shadcn-style primitives — replace paths if your project differs */
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card } from "../components/ui/card";
+import { Label } from "../components/ui/label";
+import { Spinner } from "../components/ui/spinner"; // optional, fallback below if you don't have it
 
-const Profile = ({ initialUser = null, onSignIn, onCreateAccount, onSignOut }) => {
-  const [user] = useState(initialUser)
-  const reduce = useReducedMotion()
+// Minimal inline helper for email validation
+const isEmail = (s = "") => /\S+@\S+\.\S+/.test(s);
 
-  const containerMotion = {
-    initial: { opacity: 0, y: 8 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.32 }
-  }
+export default function Profile() {
+  const [user, setUser] = useState(null);
+  const [mode, setMode] = useState("signed-out"); // 'signed-out' | 'sign-in' | 'sign-up' | 'signed-in'
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
 
-  const btnBase = 'w-full py-2.5 rounded-lg font-medium transition-shadow focus:outline-none focus:ring-2 focus:ring-offset-2'
+  // load current session user on mount
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getUser();
+        if (!mounted) return;
+        if (data?.user) {
+          setUser(data.user);
+          setMode("signed-in");
+        } else {
+          setUser(null);
+          setMode("signed-out");
+        }
+      } catch (err) {
+        // ignore
+      }
+    })();
+
+    // subscribe to auth changes so UI stays in sync
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setMode("signed-in");
+      } else {
+        setUser(null);
+        setMode("signed-out");
+      }
+    });
+
+    return () => {
+      mounted = false;
+      sub.subscription?.unsubscribe?.();
+    };
+  }, []);
+
+  const resetMessages = () => {
+    setError(null);
+    setInfo(null);
+  };
+
+  // sign in
+  const handleSignIn = async (e) => {
+    e?.preventDefault();
+    resetMessages();
+    if (!isEmail(form.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!form.password || form.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
+    const { data, error: err } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
+    setLoading(false);
+    if (err) {
+      setError(err.message || "Sign in failed.");
+      return;
+    }
+    setUser(data?.user ?? null);
+    setMode("signed-in");
+  };
+
+  // sign up
+  const handleSignUp = async (e) => {
+    e?.preventDefault();
+    resetMessages();
+    if (!isEmail(form.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!form.password || form.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
+    const { data, error: err } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+    });
+    setLoading(false);
+    if (err) {
+      setError(err.message || "Sign up failed.");
+      return;
+    }
+    // Supabase may require email confirmation depending on your project settings
+    setInfo("Check your email for a confirmation link (if required).");
+    setUser(data?.user ?? null);
+    setMode("signed-in");
+  };
+
+  const handleSignOut = async () => {
+    setLoading(true);
+    await supabase.auth.signOut();
+    setUser(null);
+    setMode("signed-out");
+    setLoading(false);
+  };
+
+  const CompactForm = ({ onSubmit, submitLabel = "Continue" }) => (
+    <form onSubmit={onSubmit} className="space-y-3">
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
+          placeholder="you@example.com"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          value={form.password}
+          onChange={(e) => setForm((s) => ({ ...s, password: e.target.value }))}
+          placeholder="••••••••"
+        />
+      </div>
+
+      {error && <div className="text-sm text-red-400">{error}</div>}
+      {info && <div className="text-sm text-green-400">{info}</div>}
+
+      <div className="flex items-center gap-3">
+        <Button type="submit" disabled={loading}>
+          {loading ? "Working..." : submitLabel}
+        </Button>
+        <Button
+          variant="ghost"
+          type="button"
+          onClick={() => {
+            resetMessages();
+            setMode("signed-out");
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-10">
-      {!user ? (
-        <motion.section
-          {...(reduce ? {} : containerMotion)}
-          className="w-full max-w-sm bg-black border border-neutral-800/60 rounded-2xl shadow-[0_6px_30px_rgba(0,0,0,0.6)] p-6"
-          aria-labelledby="profile-heading"
-        >
-          <header className="text-center mb-6">
-            <div className="mx-auto w-16 h-16 rounded-full bg-neutral-900 flex items-center justify-center">
-              <FaUser className="text-2xl text-neutral-400" aria-hidden />
-            </div>
-            <h1 id="profile-heading" className="mt-3 text-lg font-semibold">Welcome to Streamr</h1>
-            <p className="mt-1 text-sm text-neutral-400">Sign in to personalize your dashboard</p>
-          </header>
-
-          <div className="space-y-3">
-            <button
-              onClick={onSignIn}
-              className={`${btnBase} bg-white text-black hover:shadow-lg`}
-              aria-label="Sign in"
-            >
-              Sign in
-            </button>
-
-            <button
-              onClick={onCreateAccount}
-              className={`${btnBase} bg-neutral-900 border border-neutral-800 text-neutral-200 hover:bg-neutral-800`}
-              aria-label="Create account"
-            >
-              Create account
-            </button>
-          </div>
-        </motion.section>
-      ) : (
-        <motion.section
-          {...(reduce ? {} : containerMotion)}
-          className="w-full max-w-2xl bg-black border border-neutral-800/60 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.65)] p-6"
-          aria-labelledby="account-heading"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-neutral-900 flex items-center justify-center">
-                <FaUser className="text-2xl text-neutral-400" aria-hidden />
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md bg-neutral-900 border border-neutral-800 p-6">
+        {/* signed out landing */}
+        {mode === "signed-out" && (
+          <>
+            <div className="text-center mb-4">
+              <div className="mx-auto w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center mb-2">
+                <svg className="w-6 h-6 text-neutral-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/>
+                </svg>
               </div>
-              <div>
-                <h2 id="account-heading" className="text-lg font-semibold">{user.name}</h2>
-                <p className="text-sm text-neutral-400">{user.email}</p>
-              </div>
+              <h2 className="text-lg font-semibold">Welcome to Streamr</h2>
+              <p className="text-sm text-neutral-400 mt-1">Sign in to personalize your feed and save favorites.</p>
             </div>
 
-            <div className="flex gap-3 sm:gap-4 w-full sm:w-auto">
-              <button
-                onClick={onSignOut}
-                className="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium focus:outline-none focus:ring-2 focus:ring-red-500"
-                aria-label="Sign out"
-              >
-                <span className="hidden sm:inline">Sign out</span>
-                <span className="sm:hidden"><FaSignOutAlt /></span>
+            <div className="space-y-3">
+              <Button onClick={() => { resetMessages(); setMode("sign-in"); }} className="w-full">
+                Sign in
+              </Button>
+              <Button onClick={() => { resetMessages(); setMode("sign-up"); }} className="w-full" variant="outline">
+                Create account
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* sign-in */}
+        {mode === "sign-in" && (
+          <>
+            <h3 className="text-lg font-semibold mb-3">Sign in</h3>
+            <CompactForm onSubmit={handleSignIn} submitLabel="Sign in" />
+            <div className="mt-3 text-sm text-neutral-400">
+              Don’t have an account?{" "}
+              <button className="text-indigo-400 hover:underline" onClick={() => { resetMessages(); setMode("sign-up"); }}>
+                Create one
               </button>
             </div>
-          </div>
+          </>
+        )}
 
-          <hr className="my-6 border-neutral-800/50" />
+        {/* sign-up */}
+        {mode === "sign-up" && (
+          <>
+            <h3 className="text-lg font-semibold mb-3">Create account</h3>
+            <CompactForm onSubmit={handleSignUp} submitLabel="Sign up" />
+            <div className="mt-3 text-sm text-neutral-400">
+              Already have an account?{" "}
+              <button className="text-indigo-400 hover:underline" onClick={() => { resetMessages(); setMode("sign-in"); }}>
+                Sign in
+              </button>
+            </div>
+          </>
+        )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button
-              className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-600"
-              aria-label="Update email"
-            >
-              <FaEnvelope className="text-neutral-400" />
-              <span className="text-sm">Update email</span>
-            </button>
+        {/* signed-in */}
+        {mode === "signed-in" && user && (
+          <>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center">
+                <svg className="w-5 h-5 text-neutral-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-5 0-9 2.5-9 5v1h18v-1c0-2.5-4-5-9-5z"/>
+                </svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold">{user.email}</div>
+                <div className="text-xs text-neutral-400">Member</div>
+              </div>
+            </div>
 
-            <button
-              className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-600"
-              aria-label="Change password"
-            >
-              <FaLock className="text-neutral-400" />
-              <span className="text-sm">Change password</span>
-            </button>
+            <div className="grid grid-cols-1 gap-3">
+              <Button onClick={() => setMode("signed-in")} className="w-full">
+                Open dashboard
+              </Button>
 
-            <button
-              onClick={onSignOut}
-              className="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white sm:col-span-2"
-              aria-label="Sign out"
-            >
-              <FaSignOutAlt className="text-white" />
-              <span className="text-sm">Sign out</span>
-            </button>
-          </div>
-        </motion.section>
-      )}
+              <Button variant="destructive" onClick={handleSignOut} className="w-full" disabled={loading}>
+                {loading ? "Signing out..." : "Sign out"}
+              </Button>
+            </div>
+          </>
+        )}
+      </Card>
     </div>
-  )
+  );
 }
-
-export default Profile

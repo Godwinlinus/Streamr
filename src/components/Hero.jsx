@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaPlay } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w1280";
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -16,6 +17,7 @@ const API_OPTIONS = {
 
 const Hero = ({ selectedMovie }) => {
   const [popularMovie, setPopularMovie] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPopularMovie = async () => {
@@ -45,9 +47,10 @@ const Hero = ({ selectedMovie }) => {
 
   const displayMovie = selectedMovie || popularMovie;
 
-  const trailer = displayMovie?.videos?.results?.find(
-    (v) => v.type === "Trailer" || v.type === "Teaser"
-  );
+  const handleWatchMovie = () => {
+    if (!displayMovie) return;
+    navigate(`/watch/${displayMovie.id}`, { state: displayMovie });
+  };
 
   return (
     <motion.section
@@ -69,10 +72,8 @@ const Hero = ({ selectedMovie }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Overlay gradient blur */}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
 
-      {/* Content */}
       <div className="relative z-0 px-4 sm:px-6 md:px-6 pb-16 sm:pb-24">
         <motion.div
           className="max-w-3xl space-y-4"
@@ -115,13 +116,11 @@ const Hero = ({ selectedMovie }) => {
             transition={{ delay: 0.6 }}
           >
             <button
-              onClick={() =>
-                trailer && window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_blank")
-              }
+              onClick={handleWatchMovie}
               className="group flex items-center gap-2 px-6 py-3 mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full transition-all duration-300 focus-visible:outline-none"
             >
               <FaPlay className="group-hover:scale-110 transition-transform" />
-              <span>Watch Trailer</span>
+              <span>Play</span>
             </button>
           </motion.div>
         </motion.div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FeedCard from "../components/FeedCard";
+import { FiHeart, FiMessageCircle, FiSend } from "react-icons/fi";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -12,8 +13,15 @@ const API_OPTIONS = {
   },
 };
 
-// How many movies per page to fetch (keep small for fast first paint)
 const PAGE_SIZE = 8;
+
+// Shuffle function that randomizes movie order
+const shuffleArray = arr => {
+  return arr
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+};
 
 export default function Feed() {
   const [movies, setMovies] = useState([]);
@@ -26,16 +34,14 @@ export default function Feed() {
     isFetchingRef.current = true;
 
     try {
-      // discover/popular endpoint with small page size — TMDB ignores size param, so we keep page small
       const res = await fetch(`${API_BASE_URL}/movie/popular?page=${page}`, API_OPTIONS);
       const data = await res.json();
 
-      if (!data || !data.results || data.results.length === 0) {
+      if (!data?.results?.length) {
         setHasMore(false);
         return;
       }
 
-      // push only essential metadata; trailers will be fetched later on demand
       const batch = data.results.map(m => ({
         id: m.id,
         title: m.title,
@@ -44,8 +50,14 @@ export default function Feed() {
         overview: m.overview,
       }));
 
-      setMovies(prev => [...prev, ...batch]);
-      setPage(prev => prev + 1);
+      // randomize the new batch
+      const shuffledBatch = shuffleArray(batch);
+
+      // optional: also reshuffle existing movies + new ones for chaos mode
+      // setMovies(prev => shuffleArray([...prev, ...shuffledBatch]));
+
+      setMovies(prev => [...prev, ...shuffledBatch]);
+      setPage(p => p + 1);
     } catch (err) {
       console.error("Feed: failed to load movies", err);
       setHasMore(false);
@@ -56,36 +68,49 @@ export default function Feed() {
 
   useEffect(() => {
     fetchMovieBatch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // don't ruin this with React linting, trust your instincts
 
   return (
-    <section className="bg-black w-full text-white min-h-screen flex flex-col items-center">
+    <div className="bg-black text-white min-h-screen w-full flex flex-col items-center">
 
-      <InfiniteScroll
-        dataLength={movies.length}
-        next={fetchMovieBatch}
-        hasMore={hasMore}
-        loader={<div className="py-6 text-gray-400">Loading more...</div>}
-        style={{ width: "100%" }}
-      >
-        <div className="flex flex-col items-center gap-6 w-screen max-w-3xl">
-          {movies.map((movie, idx) => (
-            <FeedCard
-              key={movie.id}
-              movie={movie}
-              index={idx}
-              // pass a callback to prefetch next few if you want
-              prefetchNext={() => {
-                // simple heuristic: attempt to prefetch the next 1
-                if (movies[idx + 1]) {
-                  // the card will fetch when visible; we can optionally signal it
-                }
-              }}
-            />
-          ))}
-        </div>
-      </InfiniteScroll>
-    </section>
+      <div className="pt-4 w-full max-w-md">
+        <InfiniteScroll
+          dataLength={movies.length}
+          next={fetchMovieBatch}
+          hasMore={hasMore}
+          loader={<div className="py-8 text-gray-400 text-center">Loading chaos...</div>}
+          style={{ overflow: "visible" }}
+        >
+          <div className="flex flex-col items-center gap-10 w-full">
+            {movies.map((movie, idx) => (
+              <div key={movie.id} className="w-full">
+                {/* Media Card */}
+                <div className="rounded-lg overflow-hidden shadow-md shadow-black/25">
+                  <FeedCard movie={movie} index={idx} />
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center gap-6 px-3 py-3 text-xl opacity-90">
+                  <FiHeart className="cursor-pointer hover:opacity-60 transition" />
+                  <FiMessageCircle className="cursor-pointer hover:opacity-60 transition" />
+                  <FiSend className="cursor-pointer hover:opacity-60 transition" />
+                </div>
+
+                {/* Caption */}
+                <div className="px-3 text-sm text-gray-300 leading-snug line-clamp-2">
+                  <span className="font-semibold text-white mr-1">{movie.id}</span>
+                  {movie.overview || "No description available"}
+                </div>
+
+                {/* Release date like IG timestamp */}
+                <div className="text-xs px-3 pt-1 pb-2 text-gray-500 uppercase tracking-wider">
+                  {movie.release_date}
+                </div>
+              </div>
+            ))}
+          </div>
+        </InfiniteScroll>
+      </div>
+    </div>
   );
 }

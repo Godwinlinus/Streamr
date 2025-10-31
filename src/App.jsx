@@ -16,6 +16,8 @@ import TVShows from './pages/TVShows'
 import Trending from './pages/Trending'
 import MovieDetail from './pages/MovieDetail'
 import Feed from './pages/Feed'
+import Watch from "./pages/Watch";
+
 
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite'
@@ -145,6 +147,7 @@ const AppContent = () => {
               <Route path="/trending" element={<Trending />} />
               <Route path="/favourite" element={<Favourite />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/watch/:id" element={<Watch />} />
             </Routes>
           </main>
         </div>

@@ -156,32 +156,33 @@ export default function FeedCard({ movie }) {
             - When playing: hidden (opacity 0, pointer-events none)
             - When playing but user hovers the card (group-hover): show (opacity to 100, pointer-events auto)
       */}
-      <button
-        onClick={togglePlayback}
-        aria-label={isPlaying ? "Pause trailer" : "Play trailer"}
-        // dynamic classes implement the show/hide + hover-reveal behavior
-        className={[
-          "absolute inset-0 flex items-center justify-center transition-colors duration-200",
-          // background subtle overlay on hover
-          "bg-black/20 group-hover:bg-black/40",
-          // visibility rules
-          isPlaying
-            ? "opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
-            : "opacity-100 pointer-events-auto",
-        ].join(" ")}
-      >
+       {/* Tap zone */}
         <div
-          className={[
-            "flex items-center justify-center rounded-full shadow-lg transition-transform duration-150",
-            // button size + style
-            "w-16 h-16 text-3xl font-semibold",
-            // background visible but slightly translucent for polish
-            isPlaying ? "bg-white/85 text-black" : "bg-white/95 text-black",
-          ].join(" ")}
-        >
-          {loadingTrailer ? "…" : isPlaying ? "⏸" : "▶"}
-        </div>
-      </button>
+          onClick={togglePlayback}
+          className="absolute inset-0 z-10"
+          style={{ WebkitTapHighlightColor: "transparent" }}
+        ></div>
+
+        {/* Play button before start */}
+        {!isPlaying && (
+          <button
+            onClick={togglePlayback}
+            className="absolute inset-0 flex items-center justify-center z-1"
+          >
+            <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center text-3xl shadow-xl">
+              {loadingTrailer ? "…" : "▶"}
+            </div>
+          </button>
+        )}
+
+        {/* Pause hint on tap only */}
+        {isPlaying && (
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20 opacity-0 active:opacity-100 transition-opacity duration-150">
+            <div className="w-14 h-14 rounded-full bg-white/90 text-black flex items-center justify-center text-2xl">
+              ⏸
+            </div>
+          </div>
+        )}
 
       {/* Title */}
       <div className="absolute bottom-0 w-full px-4 pb-6">

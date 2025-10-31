@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           
           <div className="max-w-sm">
-            <h3 id="footer-heading" className="text-2xl font-semibold tracking-tight">
+            <h3 id="footer-heading" className="text-l font-semibold tracking-tight">
               Streamr
             </h3>
             <p className="mt-2 text-sm text-gray-400">
@@ -95,8 +95,11 @@ const Footer = () => {
           </nav>
 
           <div className="w-full max-w-xs">
-            <h4 className="text-sm font-medium text-gray-300 mb-2">Get updates</h4>
-            <p className="text-sm text-gray-400 mb-3">New releases and curated lists — no spam.</p>
+            <div>
+              <h4 className="text-sm font-medium text-gray-300 mb-2">Get updates</h4>
+              <p className="text-sm text-gray-400 mb-3">New releases and curated lists — no spam.</p>
+            </div>
+          
 
             <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
@@ -131,7 +134,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 border-t border-white/6 pt-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="flex flex-col md:flex-row items-center md:justify-between gap-3">
             <p className="text-xs text-gray-400">
               © {new Date().getFullYear()} Streamr · Made with <span aria-hidden>❤</span> by Orian
             </p>
