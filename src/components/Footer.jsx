@@ -66,42 +66,48 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:ml-12 bg-black text-white">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           
-          <div className="max-w-sm">
-            <h3 id="footer-heading" className="text-l font-semibold tracking-tight">
-              Streamr
-            </h3>
-            <p className="mt-2 text-sm text-gray-400">
-              Discover and track movies and TV shows. Clean UI, fast search, no fluff.
-            </p>
+           {/* Brand / About (center on md and smaller) */}
+          <div className="max-w-sm w-full mx-auto text-center lg:text-left">
+            <div className="flex flex-col items-center lg:items-start">
+              <h3 id="footer-heading" className="text-lg font-semibold tracking-tight">
+                Streamr
+              </h3>
+              <p className="mt-2 text-sm text-gray-400">
+                Discover and track movies and TV shows. Clean UI, fast search, no fluff.
+              </p>
 
-            <div className="mt-4 flex items-center gap-3">
-              {socials.map(({ icon: Icon, label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
-                  aria-label={label}
-                >
-                  <Icon />
-                </a>
-              ))}
+              <div className="mt-4 flex items-center justify-center lg:justify-start gap-3">
+                {socials.map(({ icon: Icon, label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className="p-2 rounded-md hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
+                    aria-label={label}
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
-          <nav className="grid grid-cols-2 gap-6 sm:grid-cols-3">
-            {navSections.map((section) => (
-              <FooterNavSection key={section.title} {...section} />
-            ))}
+          {/* Nav links (center the grid on md and smaller) */}
+          <nav className="max-w-sm w-full mx-auto text-center">
+            <div className="grid grid-cols-2 gap-6">
+              {navSections.map((section) => (
+                <FooterNavSection key={section.title} {...section} />
+              ))}
+            </div>
           </nav>
 
-          <div className="w-full max-w-xs">
+ 
+          <div className="w-full max-w-xs mx-auto md:mx-0">
             <div>
               <h4 className="text-sm font-medium text-gray-300 mb-2">Get updates</h4>
               <p className="text-sm text-gray-400 mb-3">New releases and curated lists — no spam.</p>
             </div>
-          
 
-            <form onSubmit={handleSubscribe} className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 items-center">
               <input
                 id="footer-email"
                 type="email"
@@ -111,16 +117,16 @@ const Footer = () => {
                   setStatus(null);
                 }}
                 placeholder="you@domain.com"
-                className="flex-1 bg-transparent border border-white/10 text-sm px-3 py-2 rounded-md placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
+                className="w-full sm:flex-1 bg-transparent border border-white/10 text-sm px-3 py-2 rounded-md placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/10"
                 aria-invalid={status === "err"}
               />
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-3 py-2 bg-white text-black rounded-md text-sm font-medium hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/20"
+                className="w-full sm:w-auto inline-flex items-center gap-2 px-3 py-2 bg-white text-black rounded-md text-sm font-medium hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/20"
                 aria-label="Subscribe"
               >
                 <FaEnvelope />
-                <span className="hidden sm:inline">Subscribe</span>
+                <span>Subscribe</span>
               </button>
             </form>
 

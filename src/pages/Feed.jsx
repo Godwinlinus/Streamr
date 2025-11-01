@@ -71,40 +71,42 @@ export default function Feed() {
   }, []); // don't ruin this with React linting, trust your instincts
 
   return (
-    <div className="bg-black text-white min-h-screen w-full flex flex-col items-center">
-
-      <div className="pt-4 w-full max-w-md">
+    <div className="bg-black text-white w-full flex flex-col items-center">
+      <div className="w-full max-w-md">
         <InfiniteScroll
           dataLength={movies.length}
           next={fetchMovieBatch}
           hasMore={hasMore}
-          loader={<div className="py-8 text-gray-400 text-center">Loading chaos...</div>}
+          loader={<div className="text-gray-400 text-center">Loading...</div>}
           style={{ overflow: "visible" }}
         >
-          <div className="flex flex-col items-center gap-10 w-full">
+          <div className="flex flex-col items-center w-full">
             {movies.map((movie, idx) => (
-              <div key={movie.id} className="w-full">
+              <div key={movie.id} className="w-full mb-4">
                 {/* Media Card */}
-                <div className="rounded-lg overflow-hidden shadow-md shadow-black/25">
+                <div className="overflow-hidden">
                   <FeedCard movie={movie} index={idx} />
                 </div>
 
-                {/* Action buttons */}
-                <div className="flex items-center gap-6 px-3 py-3 text-xl opacity-90">
-                  <FiHeart className="cursor-pointer hover:opacity-60 transition" />
-                  <FiMessageCircle className="cursor-pointer hover:opacity-60 transition" />
-                  <FiSend className="cursor-pointer hover:opacity-60 transition" />
-                </div>
+                {/* Action buttons and info container */}
+                <div className="bg-black">
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-6 px-3 pt-2 text-xl opacity-90">
+                    <FiHeart className="cursor-pointer hover:opacity-60 transition" />
+                    <FiMessageCircle className="cursor-pointer hover:opacity-60 transition" />
+                    <FiSend className="cursor-pointer hover:opacity-60 transition" />
+                  </div>
 
-                {/* Caption */}
-                <div className="px-3 text-sm text-gray-300 leading-snug line-clamp-2">
-                  <span className="font-semibold text-white mr-1">{movie.id}</span>
-                  {movie.overview || "No description available"}
-                </div>
+                  {/* Caption */}
+                  <div className="px-3 py-1 text-sm text-gray-300 leading-snug line-clamp-2">
+                    <span className="font-semibold text-white mr-1">{movie.id}</span>
+                    {movie.overview || "No description available"}
+                  </div>
 
-                {/* Release date like IG timestamp */}
-                <div className="text-xs px-3 pt-1 pb-2 text-gray-500 uppercase tracking-wider">
-                  {movie.release_date}
+                  {/* Release date like IG timestamp */}
+                  <div className="text-xs px-3 pb-3 text-gray-500 uppercase tracking-wider">
+                    {movie.release_date}
+                  </div>
                 </div>
               </div>
             ))}
