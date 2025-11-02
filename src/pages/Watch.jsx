@@ -148,7 +148,7 @@ export default function Watch() {
 
         {/* Title + Tagline */}
         <div>
-          <h1 className="text-4xl font-extrabold">{movie.title}</h1>
+          <h1 className="text-xl font-extrabold">{movie.title}</h1>
           {movie.tagline && (
             <p className="italic text-gray-400 mt-1">{movie.tagline}</p>
           )}
@@ -171,7 +171,7 @@ export default function Watch() {
         <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
 
         {/* Credits */}
-        <div className="text-sm text-gray-400 space-y-1">
+        <div className="text-sm md:text-xl text-gray-400 space-y-1">
           {director && <p><span className="font-semibold text-white">Director:</span> {director.name}</p>}
           {writers?.length > 0 && (
             <p>
@@ -193,7 +193,7 @@ export default function Watch() {
 
         {/* Cast */}
         <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-3">Cast</h2>
+          <h2 className="text-md md:text-xl font-semibold mb-3">Cast</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
             {topCast?.map((actor) => (
               <div key={actor.id} className="text-center">
@@ -215,7 +215,7 @@ export default function Watch() {
 
         {/* Comments */}
         <div className="mt-6 border-t border-gray-700 pt-4">
-          <h2 className="text-lg font-bold mb-2">Comments</h2>
+          <h2 className="text-md md:text-xl font-bold mb-2">Comments</h2>
           <p className="text-gray-500 text-sm">
             No comments yet...
           </p>

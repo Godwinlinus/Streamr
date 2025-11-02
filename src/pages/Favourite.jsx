@@ -17,8 +17,8 @@ const Favourite = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-8">
-        <HiOutlineHeart className="text-3xl text-red-500" />
-        <h1 className="text-3xl font-bold">My Favorites</h1>
+         
+        <h1 className="text-lg font-bold">My Favorites</h1>
       </div>
 
       {favorites.length === 0 ? (
@@ -28,8 +28,8 @@ const Favourite = () => {
           className="flex flex-col items-center justify-center py-12 text-center"
         >
           <HiOutlineHeart className="text-6xl text-gray-600 mb-4" />
-          <h2 className="text-xl text-gray-400 mb-2">No favorites yet</h2>
-          <p className="text-gray-500">
+          <h2 className="text-lg text-gray-400 mb-2">No favorites yet</h2>
+          <p className="text-gray-500 text-sm">
             Start adding movies to your favorites by clicking the heart icon on any movie
           </p>
         </motion.div>

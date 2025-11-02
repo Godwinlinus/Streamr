@@ -110,7 +110,7 @@ const Hero = ({ selectedMovie }) => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight text-white drop-shadow-md">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-white drop-shadow-md">
             {displayMovie ? displayMovie.title : "Loading..."}
           </h1>
 
@@ -158,9 +158,9 @@ const Hero = ({ selectedMovie }) => {
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <FaPlay className="group-hover:scale-110 transition-transform" />
+                <FaPlay className="text-sm group-hover:scale-110 transition-transform" />
               )}
-              <span>{isLoading ? 'Loading...' : 'Play'}</span>
+              <span className="text-sm md:text-lg">{isLoading ? 'Loading...' : 'Play'}</span>
             </button>
           </motion.div>
         </motion.div>

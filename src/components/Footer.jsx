@@ -69,8 +69,8 @@ const Footer = () => {
            {/* Brand / About (center on md and smaller) */}
           <div className="max-w-sm w-full mx-auto text-center lg:text-left">
             <div className="flex flex-col items-center lg:items-start">
-              <h3 id="footer-heading" className="text-lg font-semibold tracking-tight">
-                Streamr
+              <h3 id="footer-heading" className="text-lg font-momo block text-3xl mdtext-2xl tracking-normal">
+                streamr
               </h3>
               <p className="mt-2 text-sm text-gray-400">
                 Discover and track movies and TV shows. Clean UI, fast search, no fluff.
@@ -140,9 +140,9 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 border-t border-white/6 pt-6">
-          <div className="flex flex-col md:flex-row items-center md:justify-between gap-3">
+          <div className="flex flex-col mb-[20px] md:flex-row items-center md:justify-between gap-3">
             <p className="text-xs text-gray-400">
-              © {new Date().getFullYear()} Streamr · Made with <span aria-hidden>❤</span> by Orian
+              © {new Date().getFullYear()} <span className="font-momo">streamr</span> · Made with <span aria-hidden>❤</span> by Orian
             </p>
             <div className="flex items-center gap-4 text-xs text-gray-400">
               <Link to="/status" className="hover:text-white transition-colors">

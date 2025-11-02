@@ -154,12 +154,12 @@ export default function AllMovies({
     <section className="flex flex-col gap-6 w-full bg-black text-white py-10">
       {/* Header */}
       <div className="flex items-center justify-between px-6 sm:px-10">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+        <h3 className="text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
           All Movies
         </h3>
+        <div className="h-[2px] bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-600 flex-1 ml-4 opacity-70 rounded-full" />
 
         <div className="flex items-center gap-4">
-          <div className="hidden sm:block h-[2px] w-48 bg-gradient-to-r from-red-600 to-purple-600 opacity-70 rounded-full" />
           {moreAvailable && (
             <button
               onClick={() => setShowAll((s) => !s)}

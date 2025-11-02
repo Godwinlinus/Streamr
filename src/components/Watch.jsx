@@ -63,7 +63,7 @@ const Watch = () => {
         </div>
 
         <div className="mt-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">{movieData.title}</h1>
+          <h1 className="text-sm font-bold mb-2">{movieData.title}</h1>
           <p className="text-gray-400 mb-4">{movieData.overview}</p>
           <div className="flex flex-wrap gap-4 text-sm">
             <p>Release Date: {movieData.release_date}</p>

@@ -8,7 +8,7 @@ const TrendingMovies = ({ trendingMovies }) => {
     <section className="flex flex-col gap-6 w-full bg-black text-white py-10">
       {/* Header */}
       <div className="flex items-center justify-between px-4 sm:px-8 md:px-8">
-        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+        <h3 className="text-xl sm:text-3xl md:text-4xl font-bold tracking-tight">
           Trending Movies
         </h3>
         <div className="h-[2px] bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-600 flex-1 ml-4 opacity-70 rounded-full" />

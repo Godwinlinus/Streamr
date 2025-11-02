@@ -33,9 +33,9 @@ const NavBar = () => {
       {/* Logo (visible only on mobile) */}
       <Link
         to="/"
-        className="block md:hidden text-2xl font-extrabold bg-red-700 bg-clip-text text-transparent tracking-tight"
+        className="font-momo block text-3xl md:hidden text-2xl tracking-normal"
       >
-        Streamr
+        streamr
       </Link>
 
       {/* Desktop Links */}

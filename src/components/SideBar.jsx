@@ -25,9 +25,9 @@ const SideBar = () => {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="text-3xl font-extrabold text-[#e50914] select-none"
+          className="font-momo block text-4xl tracking-normal"
         >
-          S
+          s
         </motion.div>
 
         <nav className="flex flex-col items-center gap-8 mt-8">
@@ -36,7 +36,7 @@ const SideBar = () => {
               key={path}
               to={path}
               aria-label={label}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-200
+              className={`text-xl flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-200
                 ${isActive(path) ? "text-[#e50914]" : "text-gray-400 hover:text-[#e50914]"}`}
             >
               {icon}

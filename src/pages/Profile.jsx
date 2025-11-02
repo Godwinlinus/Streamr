@@ -94,41 +94,43 @@ export default function Profile() {
   }
 
   return (
-    <Card className="p-6 max-w-sm mx-auto mt-8">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-bold mb-4">Sign In</h2>
-        
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
+    <div className="flex flex-col min-h-screen justify-center">
+      <Card className="p-6 max-w-sm mx-auto">
+        <form onSubmit={handleSubmit}>
+          <h2 className="font-bold mb-4">Sign In</h2>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                required
+              />
+            </div>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {info && <p className="text-green-500 text-sm">{info}</p>}
+
+            <Button type="submit" disabled={loading}>
+              {loading ? <Spinner /> : "Sign In"}
+            </Button>
           </div>
-
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-            />
-          </div>
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          {info && <p className="text-green-500 text-sm">{info}</p>}
-
-          <Button type="submit" disabled={loading}>
-            {loading ? <Spinner /> : "Sign In"}
-          </Button>
-        </div>
-      </form>
-    </Card>
+        </form>
+      </Card>
+    </div>    
   );
 }
