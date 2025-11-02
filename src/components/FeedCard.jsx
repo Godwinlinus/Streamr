@@ -120,7 +120,7 @@ export default function FeedCard({ movie }) {
     // note: 'group' allows group-hover to work on the overlay button
     <div
       ref={ref}
-      className="group relative w-full h-screen bg-black text-white overflow-hidden select-none"
+      className="group relative w-full h-[85dvh] md:h-[85vh] lg:h-[85vh] bg-black text-white overflow-hidden select-none"
       aria-label={movie.title}
     >
       <div className="absolute inset-0">
@@ -130,14 +130,14 @@ export default function FeedCard({ movie }) {
             src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1`}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
             style={{ border: 0 }}
           />
         ) : posterUrl ? (
           <img
             src={posterUrl}
             alt={movie.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
             loading="lazy"
           />
         ) : (

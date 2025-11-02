@@ -1,5 +1,7 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { motion } from 'framer-motion';
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -15,33 +17,90 @@ const API_OPTIONS = {
 export default function Watch() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const initialMovie = location.state;
   const [movie, setMovie] = useState(initialMovie);
   const [credits, setCredits] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!movie) {
-        const res = await fetch(
-          `${API_BASE_URL}/movie/${id}?append_to_response=videos`,
-          API_OPTIONS
-        );
-        const data = await res.json();
-        setMovie(data);
-      }
+      try {
+        if (!movie) {
+          // Try fetching as a movie first
+          const movieRes = await fetch(
+            `${API_BASE_URL}/movie/${id}?append_to_response=videos`,
+            API_OPTIONS
+          );
 
-      const creditRes = await fetch(`${API_BASE_URL}/movie/${id}/credits`, API_OPTIONS);
-      const creditData = await creditRes.json();
-      setCredits(creditData);
+          if (movieRes.ok) {
+            const data = await movieRes.json();
+            if (data.success === false) {
+              throw new Error('Movie not found');
+            }
+            setMovie(data);
+            // Fetch movie credits
+            const creditRes = await fetch(`${API_BASE_URL}/movie/${id}/credits`, API_OPTIONS);
+            if (creditRes.ok) {
+              const creditData = await creditRes.json();
+              setCredits(creditData);
+            }
+          } else {
+            // If movie fetch fails, try as a TV show
+            const tvRes = await fetch(
+              `${API_BASE_URL}/tv/${id}?append_to_response=videos`,
+              API_OPTIONS
+            );
+            
+            if (!tvRes.ok) {
+              throw new Error('Content not found');
+            }
+            
+            const tvData = await tvRes.json();
+            if (tvData.success === false) {
+              throw new Error('TV Show not found');
+            }
+            
+            // Convert TV show data to match movie data structure
+            const processedTvData = {
+              ...tvData,
+              title: tvData.name,
+              release_date: tvData.first_air_date,
+              runtime: tvData.episode_run_time?.[0] || null
+            };
+            
+            setMovie(processedTvData);
+            
+            // Fetch TV credits
+            const tvCreditRes = await fetch(`${API_BASE_URL}/tv/${id}/credits`, API_OPTIONS);
+            if (tvCreditRes.ok) {
+              const creditData = await tvCreditRes.json();
+              setCredits(creditData);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching content:', err);
+        setError('Unable to load content. Redirecting...');
+        setTimeout(() => navigate(-1), 3000);
+      }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, movie, navigate]);
+
+  if (error) {
+    return (
+      <div className="bg-black min-h-screen text-white flex items-center justify-center">
+        <p className="text-xl text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   if (!movie) {
     return (
       <div className="bg-black min-h-screen text-white flex items-center justify-center">
-        Loading...
+        <div className="w-8 h-8 border-4 border-red-600 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -57,8 +116,20 @@ export default function Watch() {
   const topCast = credits?.cast?.slice(0, 8);
 
   return (
-    <div className="bg-black min-h-screen text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="bg-black min-h-screen text-white"
+    >
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-white mb-4 hover:text-red-600 transition-colors"
+        >
+          <AiOutlineArrowLeft size={24} className="mr-2" />
+          Back
+        </button>
 
         {/* Video */}
         {trailer ? (
@@ -146,10 +217,10 @@ export default function Watch() {
         <div className="mt-6 border-t border-gray-700 pt-4">
           <h2 className="text-lg font-bold mb-2">Comments</h2>
           <p className="text-gray-500 text-sm">
-            Comments feature shipping later. Don't cry.
+            No comments yet...
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

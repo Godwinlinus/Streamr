@@ -24,15 +24,30 @@ const Trending = () => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `https://api.themoviedb.org/3/trending/all/${timeWindow}?language=en-US`,
           API_OPTIONS
         );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch trending content');
+        }
+
         const data = await response.json();
-        setTrendingContent(data.results);
-        setIsLoading(false);
+        
+        // Add media_type if it's missing
+        const processedResults = data.results.map(item => ({
+          ...item,
+          media_type: item.media_type || (item.first_air_date ? 'tv' : 'movie')
+        }));
+
+        setTrendingContent(processedResults);
+        setError(null);
       } catch (err) {
-        setError("Error fetching trending content");
+        setError("Error fetching trending content. Please try again later.");
+        console.error('Trending fetch error:', err);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -43,8 +58,57 @@ const Trending = () => {
   if (isLoading) return <Spinner />;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
-  const handleSelectMovie = (movie) => {
-    navigate(`/watch/${movie.id}`, { state: movie });
+  const handleSelectMovie = async (movie) => {
+    try {
+      setIsLoading(true);
+      const mediaType = movie.media_type || (movie.first_air_date ? 'tv' : 'movie');
+      
+      // Fetch full details with videos
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${mediaType}/${movie.id}?append_to_response=videos`,
+        API_OPTIONS
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch content details');
+      }
+
+      const contentData = await response.json();
+      
+      // Process videos to find a suitable trailer
+      const videos = contentData.videos?.results || [];
+      const trailer = videos.find(
+        video => video.type === "Trailer" && video.site === "YouTube"
+      ) || videos.find(
+        video => video.type === "Teaser" && video.site === "YouTube"
+      ) || videos.find(
+        video => video.site === "YouTube"
+      );
+
+      // If we found a video, go to watch page
+      if (trailer) {
+        // Format the data consistently whether it's a movie or TV show
+        const formattedData = {
+          ...contentData,
+          title: contentData.title || contentData.name,
+          release_date: contentData.release_date || contentData.first_air_date,
+          runtime: contentData.runtime || contentData.episode_run_time?.[0],
+          media_type: mediaType,
+          selectedTrailer: trailer
+        };
+
+        navigate(`/watch/${movie.id}`, { state: formattedData });
+      } else {
+        // No trailer available, go to detail page
+        navigate(`/${mediaType}/${movie.id}`);
+      }
+    } catch (err) {
+      console.error('Error fetching content details:', err);
+      const mediaType = movie.media_type || (movie.first_air_date ? 'tv' : 'movie');
+      navigate(`/${mediaType}/${movie.id}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

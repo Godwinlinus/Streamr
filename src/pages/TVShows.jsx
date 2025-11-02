@@ -49,15 +49,53 @@ const TVShows = () => {
   if (isLoading) return <Spinner />;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
-  const handleSelectShow = (show) => {
-    navigate(`/watch/${show.id}`, {
-      state: {
-        ...show,
-        media_type: "tv", // crucial: tells Watch page to fetch TV data
-        title: show.name,
-        release_date: show.first_air_date
+  const handleSelectShow = async (show) => {
+    try {
+      setIsLoading(true);
+      
+      // Fetch full TV show details with videos
+      const response = await fetch(
+        `https://api.themoviedb.org/3/tv/${show.id}?append_to_response=videos`,
+        API_OPTIONS
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch TV show details');
       }
-    });
+
+      const showData = await response.json();
+      
+      // Find a suitable video to play
+      const trailer = showData.videos?.results.find(
+        video => video.type === "Trailer" && video.site === "YouTube"
+      ) || showData.videos?.results.find(
+        video => video.type === "Teaser" && video.site === "YouTube"
+      ) || showData.videos?.results.find(
+        video => video.site === "YouTube"
+      );
+
+      if (trailer) {
+        // Format the data consistently
+        const formattedData = {
+          ...showData,
+          title: showData.name,
+          release_date: showData.first_air_date,
+          runtime: showData.episode_run_time?.[0],
+          media_type: "tv",
+          selectedTrailer: trailer
+        };
+
+        navigate(`/watch/${show.id}`, { state: formattedData });
+      } else {
+        // No trailer available, go to TV show detail page
+        navigate(`/tv/${show.id}`);
+      }
+    } catch (err) {
+      console.error('Error fetching TV show details:', err);
+      navigate(`/tv/${show.id}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
