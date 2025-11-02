@@ -16,7 +16,7 @@ export default function Preloader({ autoFinishMs = 1500, onFinish }) {
     <AnimatePresence mode="wait">
       <motion.div
         id="preloader-root"
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black text-white transition-opacity duration-500"
+        className="fixed inset-0 z-[9999] h-screen flex items-center justify-center bg-black transition-opacity duration-500"
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -29,12 +29,12 @@ export default function Preloader({ autoFinishMs = 1500, onFinish }) {
           />
 
           <motion.span
-            className="text-sm text-white/70 tracking-wider uppercase"
+            className="text-sm text-white tracking-wider font-momo self-end"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            Streamr
+            streamr
           </motion.span>
         </div>
       </motion.div>
