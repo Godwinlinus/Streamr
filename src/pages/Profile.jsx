@@ -94,7 +94,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen justify-center">
+    <div className="flex flex-col min-h-full items-center justify-center">
       <Card className="p-6 max-w-sm mx-auto">
         <form onSubmit={handleSubmit}>
           <h2 className="font-bold mb-4">Sign In</h2>

@@ -108,6 +108,8 @@ const AppContent = () => {
 
   const shouldHideSearch = ['/profile', '/favourite', '/trending', '/tv-shows', '/feed', '/watch']
     .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
+  const shouldHideFooter = ['/profile', '/favourite']
+    .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
 
   return (
     <div className="flex flex-col min-h-screen text-white bg-black scroll-smooth font-tracking-normal">
@@ -153,7 +155,7 @@ const AppContent = () => {
           </main>
         </div>
       </div>
-      <Footer />
+      {!shouldHideFooter && <Footer />}
     </div>
   )
 }
