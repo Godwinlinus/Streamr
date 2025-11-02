@@ -1,103 +1,66 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-// icons
+// SideBar.jsx
+import React from "react";
+import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 import { HiOutlineHome } from "react-icons/hi";
-import {
-  MdMovieCreation,
-  MdOutlineLiveTv,
-  MdOutlineBookmarkAdd,
-} from "react-icons/md";
-import { RiSettings6Fill } from "react-icons/ri";
+import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { IoClose } from "react-icons/io5";
 
 const SideBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
-    { label: "Home", icon: <HiOutlineHome /> },
-    { label: "Movies", icon: <MdMovieCreation /> },
-    { label: "Live TV", icon: <MdOutlineLiveTv /> },
-    { label: "Bookmarks", icon: <MdOutlineBookmarkAdd /> },
+    { label: "Home", icon: <HiOutlineHome />, path: "/" },
+    { label: "Favourites", icon: <MdOutlineBookmarkAdd />, path: "/favourite" },
+    { label: "Profile", icon: <FaRegUser />, path: "/profile" },
   ];
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
       {/* ===== Desktop Sidebar ===== */}
-      <div className="hidden md:flex sticky top-0 h-screen w-16 flex-col items-center gap-4 py-6">
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500">S</h1>
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-16 flex-col items-center py-6 bg-black z-40">
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="text-3xl font-extrabold text-[#e50914] select-none"
+        >
+          S
+        </motion.div>
 
-        <nav className="flex flex-col items-center gap-6 mt-4">
-          {navLinks.map((link, i) => (
-            <a
-              key={i}
-              href="#"
-              aria-label={link.label}
-              className="text-lg flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:text-[#e50914] hover:scale-110 ease-linear"
+        <nav className="flex flex-col items-center gap-8 mt-8">
+          {navLinks.map(({ label, icon, path }) => (
+            <Link
+              key={path}
+              to={path}
+              aria-label={label}
+              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-200
+                ${isActive(path) ? "text-[#e50914]" : "text-gray-400 hover:text-[#e50914]"}`}
             >
-              {link.icon}
-            </a>
+              {icon}
+            </Link>
           ))}
         </nav>
-
-        <div className="mt-auto flex flex-col items-center gap-6">
-          <a
-            href="#"
-            aria-label="Settings"
-            className="text-lg flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:text-[#e50914] hover:scale-110 ease-linear"
-          >
-            <RiSettings6Fill />
-          </a>
-          <a
-            href="#"
-            aria-label="Profile"
-            className="text-lg flex h-10 w-10 items-center justify-center rounded-lg text-[#7d7d7d] transition-all hover:bg-[#170102] hover:text-[#e50914] hover:scale-110 ease-linear"
-          >
-            <FaRegUser />
-          </a>
-        </div>
-      </div>
+      </aside>
 
       {/* ===== Mobile Navbar ===== */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-[#1f1f1f] flex justify-around items-center py-3 z-50">
-        {navLinks.map((link, i) => (
-          <a
-            key={i}
-            href="#"
-            aria-label={link.label}
-            className="flex flex-col items-center hover:text-[#e50914] transition-colors"
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-neutral-800 flex justify-around items-center py-2 z-50">
+        {navLinks.map(({ label, icon, path }) => (
+          <Link
+            key={path}
+            to={path}
+            aria-label={label}
+            className={`flex flex-col items-center text-xs transition-colors ${
+              isActive(path) ? "text-white" : "text-gray-400 hover:text-white transition-colors"
+            }`}
           >
-            {link.icon}
-            <span className="text-[12px] font-bold mt-1">{link.label}</span>
-          </a>
+            <span className="text-lg">{icon}</span>
+            <span className="text-[10px] font-semibold mt-0.5">{label}</span>
+          </Link>
         ))}
-
-      </div>
-
-      {/* ===== Mobile Sidebar Overlay ===== */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center space-y-6"
-          >
-
-            <div className="flex gap-6 mt-10">
-              <a href="#" className="text-2xl font-bold hover:text-[#e50914]">
-                <RiSettings6Fill />
-              </a>
-              <a href="#" className="text-2xl font-bold hover:text-[#e50914]">
-                <FaRegUser />
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </nav>
     </>
   );
 };

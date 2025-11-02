@@ -6,14 +6,15 @@ html {
 }
 
 
-@theme {
-    --color-primary: #b70710/* Netflix Red */;
-    --color-secondary: #170102 /* Dark Red */;
-    --text-primary: #ffffff /* grey */;
-    --text-secondary: #b9b9b9 /* Light Grey */;
-    --background-primary: #000000 /* Dark Grey */;
-    --background-secondary: #1c1c1c /* Medium Grey */;
-    --background--tertiary: #080808 /* Almost Black */;
+
+:root {
+    --color-primary: #b70710; /* Netflix Red */
+    --color-secondary: #170102; /* Dark Red */
+    --text-primary: #ffffff; /* grey */
+    --text-secondary: #b9b9b9; /* Light Grey */
+    --background-primary: #000000; /* Dark Grey */
+    --background-secondary: #1c1c1c; /* Medium Grey */
+    --background-tertiary: #080808; /* Almost Black */
 }
 
 @layer base {
