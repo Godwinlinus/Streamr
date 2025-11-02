@@ -35,7 +35,7 @@ const NavBar = () => {
         to="/"
         className="font-momo block text-3xl md:hidden text-2xl tracking-normal"
       >
-        streamr
+        skreenly
       </Link>
 
       {/* Desktop Links */}

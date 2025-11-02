@@ -1,8 +1,8 @@
-# **Streamr**
+# **skreenly**
  
 ![Uploading Screenshot_9-10-2025_23452_localhost.jpeg…]()
 
-**Streamr is a slaeek and responsive movie discovery web app that lets users search, explore, and view trending movies using data fetched from The Movie Database (TMDB) API. Built with React.js and designed for a seamless, cinematic user experience.**
+**skreenly is a slaeek and responsive movie discovery web app that lets users search, explore, and view trending movies using data fetched from The Movie Database (TMDB) API. Built with React.js and designed for a seamless, cinematic user experience.**
 
 
 # Features
@@ -41,7 +41,7 @@
   - Spline Sans
 
 ## 🧩 Project Structure
-Streamr/
+skreenly/
 │
 ├── public/
 │   └── index.html
@@ -65,12 +65,12 @@ Streamr/
 
 ### Clone this repository
   
-  git clone [https://github.com/<your-username>/streamr.git]
+  git clone [https://github.com/<your-username>/skreenly.git]
 
 
 ### Navigate into the folder
 
-  cd streamr
+  cd skreenly
 
 
 ### Install dependencies
