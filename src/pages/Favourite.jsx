@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import MovieCard from '../components/MovieCard';
 import { HiOutlineHeart } from 'react-icons/hi';
+import SignIn from "../components/auth/SignIn";
 
 const Favourite = () => {
   const [favorites, setFavorites] = useState([]);
+  const [user, setUser] = useState(null);
+  const [mode, setMode] = useState("signed-out");
+  const [initializing, setInitializing] = useState(true);
 
   // Load favorites from localStorage on component mount
   useEffect(() => {

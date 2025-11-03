@@ -9,5 +9,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <AnimatePresence mode="wait">
       <App />
     </AnimatePresence>
+    
   </React.StrictMode>
 );
