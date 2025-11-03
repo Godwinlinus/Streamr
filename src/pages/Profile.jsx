@@ -77,10 +77,10 @@ export default function Profile() {
               <img
                 src={user.user_metadata.avatar_url}
                 alt="Profile"
-                className="w-24 h-24 rounded-full object-cover border-2 border-emerald-400"
+                className="w-18 h-18 md:w-24 md:h-24 rounded-full object-cover border-2 border-emerald-400"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl text-white">
+              <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-neutral-900 flex items-center justify-center text-3xl text-white">
                 {user?.email?.[0]?.toUpperCase() || "U"}
               </div>
             )}
