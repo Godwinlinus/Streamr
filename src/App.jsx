@@ -3,22 +3,25 @@ import React, { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 
+
 import Search from './components/Search'
 import Footer from './components/Footer'
 import SideBar from './components/SideBar'
 import NavBar from './components/NavBar'
 import Preloader from './components/Preloader'
+import SignIn from './components/auth/SignIn'
 
 
 import Home from './pages/Home'
-import Favourite from './pages/Favourite'
 import Profile from './pages/Profile'
+import SignUp from './pages/SignUp'
 import TVShows from './pages/TVShows'
 import Trending from './pages/Trending'
 import MovieDetail from './pages/MovieDetail'
 import Feed from './pages/Feed'
-import Watch from "./pages/Watch";
-
+import Watch from './pages/Watch'
+import Favourite from './pages/Favourite'
+import Wrapper from './pages/Wrapper'
 
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite'
@@ -106,7 +109,7 @@ const AppContent = () => {
     )
   }
 
-  const shouldHideSearch = ['/profile', '/favourite', '/trending', '/tv-shows', '/feed', '/watch']
+  const shouldHideSearch = ['/profile', '/favourite', '/trending', '/tv-shows', '/feed', '/watch', '/dashboard', '/signup']
     .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
   const shouldHideFooter = ['/profile', '/favourite']
     .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
@@ -144,12 +147,21 @@ const AppContent = () => {
                   />
                 }
               />
+              <Route path="/auth/signin" element={<SignIn />} />
               <Route path="/feed" element={<Feed />} />
               <Route path="/movie/:id" element={<MovieDetail />} />
               <Route path="/tv-shows" element={<TVShows />} />
               <Route path="/trending" element={<Trending />} />
-              <Route path="/favourite" element={<Favourite />} />
+              <Route 
+                path="/favourite" 
+                element={
+                  <Wrapper>
+                    <Favourite /> 
+                  </Wrapper>     
+                } 
+              />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="/watch/:id" element={<Watch />} />
             </Routes>
           </main>
