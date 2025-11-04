@@ -114,7 +114,7 @@ const NavBar = () => {
 
   const handleAvatarClick = () => {
     if (user) navigate("/profile");
-    else navigate("/signin");
+    else navigate("/auth/signin");
   };
 
   return (
