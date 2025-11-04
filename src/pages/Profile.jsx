@@ -70,32 +70,35 @@ export default function Profile() {
 
   if (mode === "signed-in") {
     return (
-      <div className="w-full h-full mx-auto mt-10 p-6">
+      <div className="w-full h-full mx-auto mt-10 px-6">
         <Card className="p-6 flex flex-col gap-6">
-          <div className="flex items-center gap-2">
-            {user?.user_metadata?.avatar_url ? (
-              <img
-                src={user.user_metadata.avatar_url}
-                alt="Profile"
-                className="w-18 h-18 md:w-24 md:h-24 rounded-full object-cover border-2 border-emerald-400"
-              />
-            ) : (
-              <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-neutral-900 flex items-center justify-center text-3xl text-white">
-                {user?.email?.[0]?.toUpperCase() || "U"}
-              </div>
-            )}
-            <div className="text-sm pr-2">{user?.email}</div>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-2">
+              {user?.user_metadata?.avatar_url ? (
+                <img
+                  src={user.user_metadata.avatar_url}
+                  alt="Profile"
+                  className="w-10 h-10 md:w-24 md:h-24 rounded-full object-cover border-2 border-emerald-400"
+                />
+              ) : (
+                <div className="w-10 h-10 md:w-24 md:h-24 rounded-full bg-neutral-900 flex items-center justify-center text-lg md:text-3xl text-white">
+                  {user?.email?.[0]?.toUpperCase() || "U"}
+                </div>
+              )}
+              <div className="text-sm pr-2">{user?.email}</div>
+            </div>
             <Button variant="destructive" onClick={handleSignOut}>
               Sign Out
             </Button>
           </div>
 
-          <div className="w-full mt-6">
-            <h2 className="font-bold md:text-xl font-bold mb-2">
-              Watch History
-            </h2>
-          </div>
+          
         </Card>
+        <div className="w-full mt-6">
+          <h2 className="font-bold md:text-xl font-bold mb-2">
+            Watch History
+          </h2>
+        </div>
       </div>
     );
   }
