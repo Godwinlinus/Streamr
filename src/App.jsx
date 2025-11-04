@@ -109,9 +109,9 @@ const AppContent = () => {
     )
   }
 
-  const shouldHideSearch = ['/profile', '/favourite', '/trending', '/tv-shows', '/feed', '/watch', '/dashboard', '/signup']
+  const shouldHideSearch = ['/profile', '/favourite', '/trending', '/tv-shows', '/feed', '/watch', '/dashboard', '/signup', '/auth/signin']
     .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
-  const shouldHideFooter = ['/profile', '/favourite']
+  const shouldHideFooter = ['/profile', '/favourite', '/auth/signin']
     .some(p => location.pathname === p || location.pathname.startsWith(`${p}/`))
 
   return (
