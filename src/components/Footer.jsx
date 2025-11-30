@@ -63,7 +63,7 @@ const Footer = () => {
       transition={{ duration: 0.45, ease: "easeOut" }}
       aria-labelledby="footer-heading"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:ml-12 bg-black text-white">
+      <div className="mx-auto px-6 md:px-12 py-10 md:ml-12 bg-black text-white">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           
            {/* Brand / About (center on md and smaller) */}

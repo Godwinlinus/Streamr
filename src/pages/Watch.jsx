@@ -134,7 +134,7 @@ export default function Watch() {
         {/* Video */}
         {trailer ? (
           <iframe
-            className="w-full h-[65vh] rounded-lg"
+            className="w-full h-[65vh] rounded-lg border-1 border-gray-700"
             src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&controls=1`}
             title={movie.title}
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
