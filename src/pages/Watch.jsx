@@ -26,68 +26,61 @@ export default function Watch() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!movie) {
-          // Try fetching as a movie first
-          const movieRes = await fetch(
-            `${API_BASE_URL}/movie/${id}?append_to_response=videos`,
-            API_OPTIONS
-          );
+        // Try movie first
+        const movieRes = await fetch(
+          `${API_BASE_URL}/movie/${id}?append_to_response=videos`,
+          API_OPTIONS
+        );
 
-          if (movieRes.ok) {
-            const data = await movieRes.json();
-            if (data.success === false) {
-              throw new Error('Movie not found');
-            }
-            setMovie(data);
-            // Fetch movie credits
-            const creditRes = await fetch(`${API_BASE_URL}/movie/${id}/credits`, API_OPTIONS);
-            if (creditRes.ok) {
-              const creditData = await creditRes.json();
-              setCredits(creditData);
-            }
-          } else {
-            // If movie fetch fails, try as a TV show
-            const tvRes = await fetch(
-              `${API_BASE_URL}/tv/${id}?append_to_response=videos`,
-              API_OPTIONS
-            );
-            
-            if (!tvRes.ok) {
-              throw new Error('Content not found');
-            }
-            
-            const tvData = await tvRes.json();
-            if (tvData.success === false) {
-              throw new Error('TV Show not found');
-            }
-            
-            // Convert TV show data to match movie data structure
-            const processedTvData = {
-              ...tvData,
-              title: tvData.name,
-              release_date: tvData.first_air_date,
-              runtime: tvData.episode_run_time?.[0] || null
-            };
-            
-            setMovie(processedTvData);
-            
-            // Fetch TV credits
-            const tvCreditRes = await fetch(`${API_BASE_URL}/tv/${id}/credits`, API_OPTIONS);
-            if (tvCreditRes.ok) {
-              const creditData = await tvCreditRes.json();
-              setCredits(creditData);
-            }
+        if (movieRes.ok) {
+          const data = await movieRes.json();
+          setMovie(data);
+
+          const creditRes = await fetch(`${API_BASE_URL}/movie/${id}/credits`, API_OPTIONS);
+          if (creditRes.ok) {
+            const creditsData = await creditRes.json();
+            setCredits(creditsData);
           }
+
+          return;
+        }
+
+        // Try TV as fallback
+        const tvRes = await fetch(
+          `${API_BASE_URL}/tv/${id}?append_to_response=videos`,
+          API_OPTIONS
+        );
+
+        if (!tvRes.ok) {
+          throw new Error("Content not found");
+        }
+
+        const tvData = await tvRes.json();
+
+        const processed = {
+          ...tvData,
+          title: tvData.name,
+          release_date: tvData.first_air_date,
+          runtime: tvData.episode_run_time?.[0] || null
+        };
+
+        setMovie(processed);
+
+        const creditRes = await fetch(`${API_BASE_URL}/tv/${id}/credits`, API_OPTIONS);
+        if (creditRes.ok) {
+          const creditsData = await creditRes.json();
+          setCredits(creditsData);
         }
       } catch (err) {
-        console.error('Error fetching content:', err);
-        setError('Unable to load content. Redirecting...');
+        console.error("Error fetching content:", err);
+        setError("Unable to load content. Redirecting...");
         setTimeout(() => navigate(-1), 3000);
       }
     };
 
     fetchData();
-  }, [id, movie, navigate]);
+  }, [id, navigate]);
+
 
   if (error) {
     return (
