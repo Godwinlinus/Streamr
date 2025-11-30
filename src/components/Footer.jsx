@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           
            {/* Brand / About (center on md and smaller) */}
-          <div className="max-w-sm w-full mx-auto text-center lg:text-left">
+          <div className="w-full mx-auto text-center lg:text-left">
             <div className="flex flex-col items-center lg:items-start">
               <h3 id="footer-heading" className="text-lg font-momo block text-3xl mdtext-2xl tracking-normal">
                 skreenly
